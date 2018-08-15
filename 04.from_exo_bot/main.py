@@ -1,5 +1,3 @@
-#실전용
-
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -15,32 +13,31 @@ headers = {
 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
 }
 
-#새 글 알림 : n초마다 체크하는데 seq 값 다름
-num_list = []
-TOKEN = "602009043:AAHbtbRjehdhptkyxyxoyYbZdhd_RwYwyNw"
-Bot_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".format(TOKEN)
-
-html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
-soup = BeautifulSoup(html.text, 'html.parser')
-all_title = soup.find_all("a", {"class": "boardDetails"}) #모든 제목 리스트에 담기
-for i in all_title:
-    num = i['seq']
-    num_list.append(num)
-    print(num_list)
+is_First = True
+what_time = 3
+#for i in all_title:
+ #   print(i.get_text())
 
 while(True):
     html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
     soup = BeautifulSoup(html.text, 'html.parser')
-    new_first_title = soup.find("a",{"class":"boardDetails"})
-    print(new_first_title.get_text())
-    new_first_title_Num = new_first_title['seq']
-    new_url = 'https://exo-l.smtown.com/Board/Details/{}?page=1&pageSize=10&SearchType=title&SearchKeyword=&style=txt'.format(new_first_title_Num)
-    if new_first_title_Num in num_list:
-        pass
+    all_title = soup.find_all("a", {"class": "boardDetails"})
+    if what_time == 5:
+        newFirstTitle = "프엑 새글"
+
+    if is_First:
+        nowFirstTitle = all_title[0].get_text()
+        newFirstTitle = nowFirstTitle
+        print(newFirstTitle)
+        print(nowFirstTitle)
+        is_First = False
     else:
-        print("새 글이 등록되었습니다.")
-        requests.get(Bot_URL+'&text=새 글이 등록되었습니다. \n 제목 : {} \n 바로가기 : {}'.format(new_first_title.get_text(),new_url))
-        num_list.append(new_first_title_Num)
-    time.sleep(120)
+        if nowFirstTitle != newFirstTitle:
+            requests.get('https://api.telegram.org/bot602009043:AAHbtbRjehdhptkyxyxoyYbZdhd_RwYwyNw/sendMessage?chat_id=-1001270337756&text=새글떴다요!!제목은"{}"다요'.format(newFirstTitle))
+            nowFirstTitle = newFirstTitle
+            print(newFirstTitle)
+            print(nowFirstTitle)
+    time.sleep(3)
+    what_time += 1
 
 
