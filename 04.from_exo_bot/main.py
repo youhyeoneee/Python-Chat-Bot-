@@ -2,6 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import CONFIG
 headers = {
 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 'Accept-Encoding': 'gzip, deflate, br',
@@ -13,7 +14,7 @@ headers = {
 'Upgrade-Insecure-Requests': '1',
 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36',
 }
-
+TOKEN = CONFIG.BOT_TOKEN
 is_First = True
 what_time = 3
 #for i in all_title:
@@ -34,7 +35,7 @@ while(True):
         is_First = False
     else:
         if nowFirstTitle != newFirstTitle:
-            requests.get('https://api.telegram.org/bot602009043:AAHbtbRjehdhptkyxyxoyYbZdhd_RwYwyNw/sendMessage?chat_id=-1001270337756&text=새글떴다요!!제목은"{}"다요'.format(newFirstTitle))
+            requests.get('https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756&text=새글떴다요!!제목은"{}"다요'.format(TOKEN,newFirstTitle))
             nowFirstTitle = newFirstTitle
             print(newFirstTitle)
             print(nowFirstTitle)

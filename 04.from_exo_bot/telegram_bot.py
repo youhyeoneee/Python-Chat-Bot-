@@ -3,6 +3,8 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import datetime
+import CONFIG
 headers = {
 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 'Accept-Encoding': 'gzip, deflate, br',
@@ -17,7 +19,7 @@ headers = {
 
 #새 글 알림 : n초마다 체크하는데 seq 값 다름
 num_list = []
-TOKEN = "602009043:AAHbtbRjehdhptkyxyxoyYbZdhd_RwYwyNw"
+TOKEN = CONFIG.BOT_TOKEN
 Bot_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".format(TOKEN)
 
 html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
@@ -33,14 +35,15 @@ while(True):
     soup = BeautifulSoup(html.text, 'html.parser')
     new_first_title = soup.find("a",{"class":"boardDetails"})
     print(new_first_title.get_text())
+    print(datetime.datetime.now())
     new_first_title_Num = new_first_title['seq']
     new_url = 'https://exo-l.smtown.com/Board/Details/{}?page=1&pageSize=10&SearchType=title&SearchKeyword=&style=txt'.format(new_first_title_Num)
     if new_first_title_Num in num_list:
         pass
     else:
         print("새 글이 등록되었습니다.")
-        requests.get(Bot_URL+'&text=새 글이 등록되었습니다. \n 제목 : {} \n 바로가기 : {}'.format(new_first_title.get_text(),new_url))
+        requests.get(Bot_URL+'&text=:heart:새 글이 등록되었습니다. \n 제목 : {} \n 바로가기 : {}'.format(new_first_title.get_text(),new_url))
         num_list.append(new_first_title_Num)
-    time.sleep(120)
+    time.sleep(300)
 
 
