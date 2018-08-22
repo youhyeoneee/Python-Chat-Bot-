@@ -3,7 +3,7 @@ import telegram #텔레그램 모듈 임포트
 
 TOKEN = '602009043:AAHbtbRjehdhptkyxyxoyYbZdhd_RwYwyNw' #토큰을 변수에 저장
 
-BOT = telegram.Bot(token= TOKEN) # bot 선언
+BOT = telegram.Bot(token = TOKEN) # bot 선언
 
 updates = BOT.getUpdates() #업데이트 내역 받아옴
 
