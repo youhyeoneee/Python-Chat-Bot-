@@ -11,10 +11,11 @@ PW = CONFIG.PW
 TARGET_KEYWORD_LIST = CONFIG.TARGET_KEYWORD_LIST
 TARGET_KEYWORD = CONFIG.TARGET_KEYWORD
 oldList = []
-
+linkList = []
 #봇 구현
 TOKEN = CONFIG.BOT_TOKEN
-BOT_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".format(TOKEN)
+CHAT_ID = CONFIG.CHAT_ID
+BOT_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id={}".format(TOKEN, CHAT_ID)
 BOT = telegram.Bot(token = TOKEN) # bot 선언
 
 #찾고자 하는 키워드 추가 함수
@@ -48,28 +49,33 @@ if __name__ == '__main__':
         for article in articles:
             link = article.find('a',{'class':'article'})['href']
             print(link)
-            for target_keyword in TARGET_KEYWORD_LIST:
-                if target_keyword in article.get_text().strip() and article.get_text().strip() not in oldList:
-                    if article.find('h2') != None: #제목 있을 때
-                        if len(article.p.get_text().strip()) >= 50: #글자수 제한
-                            #print("[제목] ::{}".format(article.h2.get_text().strip()))
+            if link not in linkList:
+                linkList.append(link)
+                for target_keyword in TARGET_KEYWORD_LIST:
+                    if target_keyword in article.get_text().strip() and article.get_text().strip() not in oldList:
+                        if article.find('h2') != None: #제목 있을 때
+                            if len(article.p.get_text().strip()) >= 50: #글자수 제한
+                                #print("[제목] ::{}".format(article.h2.get_text().strip()))
+                                #print("[내용] ::{}".format(article.p.get_text().strip()))
+                                requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::{}\n내용 ::{}\nURL ::{}'.format(article.h2.get_text().strip(),article.p.get_text().strip()[:50]+'[더보기]','https://khu.everytime.kr'+link))
+                            else:
+                                requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::{}\n내용 ::{}\nURL ::{}'.format(article.h2.get_text().strip(),article.p.get_text().strip()[:50],'https://khu.everytime.kr'+link))
+
+
+                        else: #제목 없을 때
+                            if len(article.p.get_text().strip()) >= 50: #글자수 제한
+                                requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::없음\n내용 ::{}\nURL ::{}'.format(article.p.get_text().strip()[:50]+'[더보기]','https://khu.everytime.kr'+link))
+                            else:
+                                requests.get(BOT_URL + ' [새 글 알림]\n제목 ::없음\n내용 ::{}\nURL ::{}'.format(article.p.get_text().strip(),'https://khu.everytime.kr'+link))
+
+                            #print("[제목없음]") #제목 없을 때
                             #print("[내용] ::{}".format(article.p.get_text().strip()))
-                            requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::{}\n내용 ::{}\nURL ::{}'.format(article.h2.get_text().strip(),article.p.get_text().strip()[:50]+'[더보기]','https://khu.everytime.kr'+link))
-                        else:
-                            requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::{}\n내용 ::{}\nURL ::{}'.format(article.h2.get_text().strip(),article.p.get_text().strip()[:50],'https://khu.everytime.kr'+link))
-
-
-                    else: #제목 없을 때
-                        if len(article.p.get_text().strip()) >= 50: #글자수 제한
-                            requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::없음\n내용 ::{}\nURL ::{}'.format(article.p.get_text().strip()[:50]+'[더보기]','https://khu.everytime.kr'+link))
-                        else:
-                            requests.get(BOT_URL + '&text=[새 글 알림]\n제목 ::없음\n내용 ::{}\nURL ::{}'.format(article.p.get_text().strip(),'https://khu.everytime.kr'+link))
-
-                        #print("[제목없음]") #제목 없을 때
-                        #print("[내용] ::{}".format(article.p.get_text().strip()))
                 oldList.append(article.get_text().strip())
+        print(linkList)
         #새로고침후 원하는 딜레이시간까지 기다리기
         browser.get('https://khu.everytime.kr/search/all/{}'.format(target_keyword))
         time.sleep(CONFIG.DELAY)
+
+#test 결과 전체검색창에 글 뜨는데 3분정도 걸림
 
     browser.quit()
