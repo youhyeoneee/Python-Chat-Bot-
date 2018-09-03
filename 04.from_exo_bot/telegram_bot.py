@@ -25,6 +25,7 @@ Bot_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".fo
 html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
 soup = BeautifulSoup(html.text, 'html.parser')
 all_title = soup.find_all("a", {"class": "boardDetails"}) #모든 제목 리스트에 담기
+
 for i in all_title:
     num = i['seq']
     num_list.append(num)
@@ -39,6 +40,7 @@ while(True):
     new_first_title_Num = new_first_title['seq']
     new_url = 'https://exo-l.smtown.com/Board/Details/{}?page=1&pageSize=10&SearchType=title&SearchKeyword=&style=txt'.format(new_first_title_Num)
     if new_first_title_Num in num_list:
+        print('pass')
         pass
     else:
         print("새 글이 등록되었습니다.")
