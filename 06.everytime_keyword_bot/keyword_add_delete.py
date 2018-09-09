@@ -37,9 +37,9 @@ def keyword():
                     requests.get(BOT_URL + "&text=키워드가 삭제되었습니다.\n현재 키워드는 {} 입니다.".format(TARGET_KEYWORD_LIST))
                 else:
                     requests.get(BOT_URL + "&text=키워드가 존재하지 않습니다.")
-            #elif message == 'X':
-            #    requests.get(BOT_URL + "&text=키워드 알리미가 종료되었습니다.")
-            #    exit(-1)
+            elif message == 'X':
+                requests.get(BOT_URL + "&text=키워드 알리미가 종료되었습니다.")
+                exit(-1)
             else:
                 requests.get(BOT_URL + "&text=알 수 없는 명령어입니다.")
             update_id_LIST.append(UPDATE_ID)
