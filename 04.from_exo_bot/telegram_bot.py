@@ -26,11 +26,6 @@ html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers
 soup = BeautifulSoup(html.text, 'html.parser')
 all_title = soup.find_all("a", {"class": "boardDetails"}) #모든 제목 리스트에 담기
 
-for i in all_title:
-    num = i['seq']
-    num_list.append(num)
-    print(num_list)
-
 while(True):
     html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
     soup = BeautifulSoup(html.text, 'html.parser')
