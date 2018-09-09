@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import time
 import datetime
 import CONFIG
+import exit
+
 headers = {
 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 'Accept-Encoding': 'gzip, deflate, br',
@@ -20,13 +22,14 @@ headers = {
 #새 글 알림 : n초마다 체크하는데 seq 값 다름
 num_list = []
 TOKEN = CONFIG.BOT_TOKEN
-Bot_URL = "https://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".format(TOKEN)
+Bot_URL = "httsps://api.telegram.org/bot{}/sendMessage?chat_id=-1001270337756".format(TOKEN)
 
 html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
 soup = BeautifulSoup(html.text, 'html.parser')
 all_title = soup.find_all("a", {"class": "boardDetails"}) #모든 제목 리스트에 담기
 
 while(True):
+    exit.keyword()
     html = requests.get('https://exo-l.smtown.com/Board/List/10300', headers=headers)
     soup = BeautifulSoup(html.text, 'html.parser')
     new_first_title = soup.find("a",{"class":"boardDetails"})
