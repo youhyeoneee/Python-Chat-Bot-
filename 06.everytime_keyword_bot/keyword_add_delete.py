@@ -23,21 +23,21 @@ def keyword():
             print(u)
             print(message)
             if 'A:' in message :
-                keyword = message.split(':')[1]
+                keyword = message.split(':')[1].strip()
                 if keyword not in TARGET_KEYWORD_LIST:
-                    TARGET_KEYWORD_LIST.append(keyword.strip())
+                    TARGET_KEYWORD_LIST.append(keyword)
                     requests.get(BOT_URL + "&text=새로운 키워드가 추가되었습니다.\n현재 키워드는 {} 입니다.".format(TARGET_KEYWORD_LIST))
                 else:
                     requests.get(BOT_URL + "&text=이미 존재하는 키워드입니다.")
 
             elif 'D:' in message:
-                keyword = message.split(':')[1]
+                keyword = message.split(':')[1].strip()
                 if keyword in TARGET_KEYWORD_LIST:
                     TARGET_KEYWORD_LIST.remove(keyword)
                     requests.get(BOT_URL + "&text=키워드가 삭제되었습니다.\n현재 키워드는 {} 입니다.".format(TARGET_KEYWORD_LIST))
                 else:
                     requests.get(BOT_URL + "&text=키워드가 존재하지 않습니다.")
-            elif message == 'X':
+            elif message == 'X:':
                 requests.get(BOT_URL + "&text=키워드 알리미가 종료되었습니다.")
                 exit(-1)
             else:

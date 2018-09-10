@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import CONFIG
 import time
 import requests
-import keyword_add_delete
 import datetime
+#====================
+import keyword_add_delete
+import CONFIG
 #키워드 여러개 어케 동시에 검색할수 있을까
 #############################################
 
